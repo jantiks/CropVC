@@ -123,7 +123,7 @@ public struct Config {
 
     public var cropToolbarConfig = CropToolbarConfig()
     
-    var customRatios: [(width: Int, height: Int)] = []
+    var customRatios: [(width: Double, height: Double, name:String)] = []
     
     static private var bundleIdentifier: String = {
         return "com.echo.framework.Mantis"
@@ -144,12 +144,12 @@ public struct Config {
     public init() {
     }
         
-    mutating public func addCustomRatio(byHorizontalWidth width: Int, andHorizontalHeight height: Int) {
-        customRatios.append((width, height))
+    mutating public func addCustomRatio(byHorizontalWidth width: Double, andHorizontalHeight height: Double, name: String) {
+        customRatios.append((width, height, name))
     }
 
-    mutating public func addCustomRatio(byVerticalWidth width: Int, andVerticalHeight height: Int) {
-        customRatios.append((height, width))
+    mutating public func addCustomRatio(byVerticalWidth width: Double, andVerticalHeight height: Double, name: String) {
+        customRatios.append((height, width, name))
     }
     
     func hasCustomRatios() -> Bool {
@@ -158,8 +158,7 @@ public struct Config {
     
     func getCustomRatioItems() -> [RatioItemType] {
         return customRatios.map {
-            (String("\($0.width):\($0.height)"), Double($0.width)/Double($0.height), String("\($0.height):\($0.width)"), Double($0.height)/Double($0.width))
+            (String("\($0.name) \($0.width):\($0.height)"), Double($0.width)/Double($0.height), String("\($0.name) \($0.height):\($0.width)"), Double($0.height)/Double($0.width))
         }
     }
 }
-
