@@ -28,7 +28,6 @@ class RatioPresenter {
     func present(by viewController: UIViewController, in sourceView: UIView) {
         let countriesSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         let countries = Config.countries
-        
         for country in countries {
             let countryTitle = country
 
@@ -39,6 +38,27 @@ class RatioPresenter {
                     let title = (self.type == .horizontal) ? ratio.nameH : ratio.nameV
                     
                     if title.contains(countryTitle) {
+                        let action = UIAlertAction(title: title, style: .default) {[weak self] _ in
+                            guard let self = self else { return }
+                            let ratioValue = (self.type == .horizontal) ? ratio.ratioH : ratio.ratioV
+                            self.didGetRatio(ratioValue)
+                        }
+                        actionSheet.addAction(action)
+                    }else if countryTitle == "United States" && title.contains("US") {
+                        let action = UIAlertAction(title: title, style: .default) {[weak self] _ in
+                            guard let self = self else { return }
+                            let ratioValue = (self.type == .horizontal) ? ratio.ratioH : ratio.ratioV
+                            self.didGetRatio(ratioValue)
+                        }
+                        actionSheet.addAction(action)
+                    }else if countryTitle == "United Kingdom" && title.contains("UK") {
+                        let action = UIAlertAction(title: title, style: .default) {[weak self] _ in
+                            guard let self = self else { return }
+                            let ratioValue = (self.type == .horizontal) ? ratio.ratioH : ratio.ratioV
+                            self.didGetRatio(ratioValue)
+                        }
+                        actionSheet.addAction(action)
+                    }else if countryTitle == "United Arab Emirates" && title.contains("UK") {
                         let action = UIAlertAction(title: title, style: .default) {[weak self] _ in
                             guard let self = self else { return }
                             let ratioValue = (self.type == .horizontal) ? ratio.ratioH : ratio.ratioV
