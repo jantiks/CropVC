@@ -13,6 +13,7 @@ enum RatioType {
     case vertical
 }
 
+
 class RatioPresenter {
     var didGetRatio: ((Double)->Void) = { _ in }
     private var type: RatioType = .vertical
@@ -26,8 +27,50 @@ class RatioPresenter {
     }
     
     func present(by viewController: UIViewController, in sourceView: UIView) {
-        let countriesSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         let countries = Config.countries
+
+        let countriesSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+                
+        let searchAction = UIAlertAction(title: "Search", style: .destructive) { [weak self] _ in
+            
+            let vc = UIAlertController(title: "Search Country", message: nil, preferredStyle: .alert)
+            vc.addTextField()
+            
+            let search = UIAlertAction(title: "Done", style: .default) { [weak vc, weak self] _ in
+                guard let self = self else { return }
+                let filteredSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+                
+                var filteredArr = [String]()
+                if let text = vc?.textFields?[0].text {
+                    for i in 0..<countries.count {
+                        
+                        let country = countries[i]
+                        if country.lowercased().contains(text.lowercased()) {
+                            filteredArr.append(country)
+                        }
+                    }
+                }
+
+                
+                
+                self.callActionSheet(by: viewController, in: sourceView, alertController: filteredSheet, countries: filteredArr)
+
+//                viewController.present(countriesSheet, animated: true)
+            }
+            vc.addAction(search)
+            
+            viewController.present(vc, animated: true)
+        }
+        countriesSheet.addAction(searchAction)
+        
+        callActionSheet(by: viewController, in: sourceView, alertController: countriesSheet, countries: countries)
+        
+        
+    }
+    
+    
+    
+    func callActionSheet(by viewController: UIViewController, in sourceView: UIView, alertController: UIAlertController, countries: [String]) {
         for country in countries {
             let countryTitle = country
 
@@ -37,8 +80,12 @@ class RatioPresenter {
                 for ratio in self.ratios {
                     let title = (self.type == .horizontal) ? ratio.nameH : ratio.nameV
                     
+                    
                     if title.contains(countryTitle) {
-                        let action = UIAlertAction(title: title, style: .default) {[weak self] _ in
+                        let actionTitleArray = title.components(separatedBy: countryTitle)
+                        let actionTitle = actionTitleArray[1]
+                        
+                        let action = UIAlertAction(title: actionTitle, style: .default) {[weak self] _ in
                             guard let self = self else { return }
                             let ratioValue = (self.type == .horizontal) ? ratio.ratioH : ratio.ratioV
                             self.didGetRatio(ratioValue)
@@ -69,26 +116,22 @@ class RatioPresenter {
                     
                     
                 }
-                actionSheet.addAction(UIAlertAction(title: "Cancel", style: .default, handler: nil))
+                actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
                 viewController.present(actionSheet, animated: true)
                 
             }
-            countriesSheet.addAction(action)
+            alertController.addAction(action)
         }
-        
-       
-        
         if UIDevice.current.userInterfaceIdiom == .pad {
             // https://stackoverflow.com/a/27823616/288724
-            countriesSheet.popoverPresentationController?.permittedArrowDirections = .any
-            countriesSheet.popoverPresentationController?.sourceView = sourceView
-            countriesSheet.popoverPresentationController?.sourceRect = sourceView.bounds
+            alertController.popoverPresentationController?.permittedArrowDirections = .any
+            alertController.popoverPresentationController?.sourceView = sourceView
+            alertController.popoverPresentationController?.sourceRect = sourceView.bounds
         }
         
         let cancelText = LocalizedHelper.getString("Cancel")
         let cancelAction = UIAlertAction(title: cancelText, style: .cancel)
-        countriesSheet.addAction(cancelAction)
-        
-        viewController.present(countriesSheet, animated: true)
+        alertController.addAction(cancelAction)
+        viewController.present(alertController, animated: true)
     }
 }
