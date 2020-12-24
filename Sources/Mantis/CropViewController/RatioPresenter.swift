@@ -57,8 +57,9 @@ class RatioPresenter {
 
 //                viewController.present(countriesSheet, animated: true)
             }
-            vc.addAction(search)
             
+            vc.addAction(search)
+            vc..addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
             viewController.present(vc, animated: true)
         }
         countriesSheet.addAction(searchAction)
