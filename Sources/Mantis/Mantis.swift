@@ -124,6 +124,7 @@ public struct Config {
     public var cropToolbarConfig = CropToolbarConfig()
     
     var customRatios: [(width: Double, height: Double, name:String)] = []
+    static var countries = [String]()
     
     static private var bundleIdentifier: String = {
         return "com.echo.framework.Mantis"
@@ -146,15 +147,22 @@ public struct Config {
         
     mutating public func addCustomRatio(byHorizontalWidth width: Double, andHorizontalHeight height: Double, name: String) {
         customRatios.append((width, height, name))
+        
+    }
+    
+    mutating public func addCountries(country: [String]) {
+        Config.countries = country
     }
 
     mutating public func addCustomRatio(byVerticalWidth width: Double, andVerticalHeight height: Double, name: String) {
         customRatios.append((height, width, name))
+       
     }
     
     func hasCustomRatios() -> Bool {
         return customRatios.count > 0
     }
+    
     
     func getCustomRatioItems() -> [RatioItemType] {
         return customRatios.map {
@@ -162,3 +170,9 @@ public struct Config {
         }
     }
 }
+
+//extension RatioPresenter {
+//    func getCountyNames() -> [ratiosCountries] {
+//        return countries
+//    }
+//}

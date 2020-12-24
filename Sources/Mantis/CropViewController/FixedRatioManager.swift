@@ -9,6 +9,7 @@
 import Foundation
 
 typealias RatioItemType = (nameH: String, ratioH: Double, nameV: String, ratioV: Double)
+typealias ratiosCountries = (String)
 
 class FixedRatioManager {
     private (set) var ratios: [RatioItemType] = []

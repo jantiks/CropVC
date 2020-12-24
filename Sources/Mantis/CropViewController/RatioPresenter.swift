@@ -26,30 +26,49 @@ class RatioPresenter {
     }
     
     func present(by viewController: UIViewController, in sourceView: UIView) {
-        let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        let countriesSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        let countries = Config.countries
         
-        for ratio in ratios {
-            let title = (type == .horizontal) ? ratio.nameH : ratio.nameV
-            
-            let action = UIAlertAction(title: title, style: .default) {[weak self] _ in
+        for country in countries {
+            let countryTitle = country
+
+            let action = UIAlertAction(title: countryTitle, style: .default) { [weak self] _ in
                 guard let self = self else { return }
-                let ratioValue = (self.type == .horizontal) ? ratio.ratioH : ratio.ratioV
-                self.didGetRatio(ratioValue)
+                let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+                for ratio in self.ratios {
+                    let title = (self.type == .horizontal) ? ratio.nameH : ratio.nameV
+                    
+                    if title.contains(countryTitle) {
+                        let action = UIAlertAction(title: title, style: .default) {[weak self] _ in
+                            guard let self = self else { return }
+                            let ratioValue = (self.type == .horizontal) ? ratio.ratioH : ratio.ratioV
+                            self.didGetRatio(ratioValue)
+                        }
+                        actionSheet.addAction(action)
+                    }
+                    
+                    
+                }
+                actionSheet.addAction(UIAlertAction(title: "Cancel", style: .default, handler: nil))
+                viewController.present(actionSheet, animated: true)
+                
             }
-            actionSheet.addAction(action)
+            countriesSheet.addAction(action)
         }
+        
+       
         
         if UIDevice.current.userInterfaceIdiom == .pad {
             // https://stackoverflow.com/a/27823616/288724
-            actionSheet.popoverPresentationController?.permittedArrowDirections = .any
-            actionSheet.popoverPresentationController?.sourceView = sourceView
-            actionSheet.popoverPresentationController?.sourceRect = sourceView.bounds
+            countriesSheet.popoverPresentationController?.permittedArrowDirections = .any
+            countriesSheet.popoverPresentationController?.sourceView = sourceView
+            countriesSheet.popoverPresentationController?.sourceRect = sourceView.bounds
         }
         
         let cancelText = LocalizedHelper.getString("Cancel")
         let cancelAction = UIAlertAction(title: cancelText, style: .cancel)
-        actionSheet.addAction(cancelAction)
+        countriesSheet.addAction(cancelAction)
         
-        viewController.present(actionSheet, animated: true)
+        viewController.present(countriesSheet, animated: true)
     }
 }
