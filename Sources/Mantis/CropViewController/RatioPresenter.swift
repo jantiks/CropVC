@@ -13,6 +13,7 @@ enum RatioType {
     case vertical
 }
 
+public var ratioName = ""
 
 class RatioPresenter {
     var didGetRatio: ((Double)->Void) = { _ in }
@@ -89,6 +90,7 @@ class RatioPresenter {
                         let action = UIAlertAction(title: actionTitle, style: .default) {[weak self] _ in
                             guard let self = self else { return }
                             let ratioValue = (self.type == .horizontal) ? ratio.ratioH : ratio.ratioV
+                            ratioName = actionTitle
                             self.didGetRatio(ratioValue)
                         }
                         actionSheet.addAction(action)
@@ -96,6 +98,7 @@ class RatioPresenter {
                         let action = UIAlertAction(title: title, style: .default) {[weak self] _ in
                             guard let self = self else { return }
                             let ratioValue = (self.type == .horizontal) ? ratio.ratioH : ratio.ratioV
+                            ratioName = title
                             self.didGetRatio(ratioValue)
                         }
                         actionSheet.addAction(action)
@@ -103,6 +106,7 @@ class RatioPresenter {
                         let action = UIAlertAction(title: title, style: .default) {[weak self] _ in
                             guard let self = self else { return }
                             let ratioValue = (self.type == .horizontal) ? ratio.ratioH : ratio.ratioV
+                            ratioName = title
                             self.didGetRatio(ratioValue)
                         }
                         actionSheet.addAction(action)
@@ -110,6 +114,7 @@ class RatioPresenter {
                         let action = UIAlertAction(title: title, style: .default) {[weak self] _ in
                             guard let self = self else { return }
                             let ratioValue = (self.type == .horizontal) ? ratio.ratioH : ratio.ratioV
+                            ratioName = title
                             self.didGetRatio(ratioValue)
                         }
                         actionSheet.addAction(action)
